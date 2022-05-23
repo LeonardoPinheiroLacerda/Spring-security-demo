@@ -8,6 +8,7 @@ import com.leonardo.springsecuritydemo.models.enums.Role;
 import com.leonardo.springsecuritydemo.repositories.UserRepository;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -18,11 +19,12 @@ import lombok.AllArgsConstructor;
 public class DbService implements CommandLineRunner{
     
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
     public void mock(){
 
-        AppUser user1 = new AppUser(null, "Leonardo", "Lacerda", "leon", "senha123", Sets.newHashSet(Role.ADMIN, Role.COMMON));
-        AppUser user2 = new AppUser(null, "Roberio", "Silva", "rob", "senha123", Sets.newHashSet(Role.COMMON));
+        AppUser user1 = new AppUser(null, "Leonardo", "Lacerda", "leon", passwordEncoder.encode("senha123"), Sets.newHashSet(Role.ADMIN, Role.COMMON));
+        AppUser user2 = new AppUser(null, "Roberio", "Silva", "rob", passwordEncoder.encode("senha123"), Sets.newHashSet(Role.COMMON));
 
         repository.saveAll(Arrays.asList(user1, user2));
 
