@@ -9,6 +9,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+
 /**
  * Componente que irá requisitar o usuário e senha ao fazer uma 
  * tentativa de requisição sem credênciais ou com credênciais invalidas
@@ -16,9 +20,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppBasicAuthenticationEntryPoint extends BasicAuthenticationEntryPoint{
     
+	private final HttpBasicProperties httpBasicProperties;
+
     @Override
 	public void afterPropertiesSet() {
-        setRealmName("demoApp");
+        setRealmName(httpBasicProperties.getRealm());
 		super.afterPropertiesSet();
 	}
 
