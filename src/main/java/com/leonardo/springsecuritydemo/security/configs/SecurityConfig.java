@@ -13,9 +13,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfig {
     
     private final Environment environment;
+    private final BasicAuthenticationEntryPoint basicAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -49,7 +52,14 @@ public class SecurityConfig {
         http.authorizeRequests()
             .antMatchers(HttpMethod.GET, "/api/tests/common").hasRole(Role.COMMON.name())
             .antMatchers(HttpMethod.GET, "/api/tests/admin").hasRole(Role.ADMIN.name())
-            .anyRequest().authenticated();
+            .anyRequest().authenticated()
+            
+            .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+            .and()
+            .httpBasic()
+            .authenticationEntryPoint(basicAuthenticationEntryPoint);
 
 
         return http.build();
