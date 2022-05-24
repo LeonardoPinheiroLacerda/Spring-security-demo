@@ -33,6 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
        
+        //Libera acesso ao console do H2 via browser
         if(Arrays.asList(environment.getActiveProfiles()).contains("test")){
             log.warn("Perfil de teste ativo. Acesso ao console do H2 liberado!");
 
