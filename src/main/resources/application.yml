@@ -1,3 +1,8 @@
 spring:
     profiles:
         active: test
+
+application:
+    jwt:
+        secretkey: lkasjdfhsdlkjha08f7asdfasdfaklasfsa
+        tokenexpirationafterdays: 21
