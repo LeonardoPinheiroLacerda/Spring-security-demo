@@ -1,6 +1,7 @@
 package com.leonardo.springsecuritydemo.security.configs;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import com.leonardo.springsecuritydemo.models.enums.Role;
 import com.leonardo.springsecuritydemo.security.users.AppUserDetailsService;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +51,33 @@ public class SecurityConfig {
         http.authorizeRequests()
             .antMatchers(HttpMethod.GET, "/api/tests/common").hasRole(Role.COMMON.name())
             .antMatchers(HttpMethod.GET, "/api/tests/admin").hasRole(Role.ADMIN.name())
-            .anyRequest().authenticated();
+            .anyRequest().authenticated()
+            
+            .and()
+            //Define a estratégia de autenticação e autorização como 'formLogin'
+            .formLogin()
+            
+            //Define a página de login e o nome dos campos que a aplicação vai esperar para autenticação
+            .loginPage("/login").permitAll()
+                .usernameParameter("username")
+                .passwordParameter("password")
+            
+            .and()
+            //Define a opção de remember-me e configura seus paramêtros.
+            .rememberMe()
+                .rememberMeParameter("rememberme")
+                .rememberMeCookieName("JREMEMBERME")
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
+                .key("sçdlkfjsçdlfkjsdpfsdf09s8df-9s8s09dksljhldfkjahlsdf8jsdfsdfj")
+        
+            .and()
+            //Define o end-point de logout e seu comportamento
+            .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", HttpMethod.POST.name()))
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID", "JREMEMBERME")
+                .logoutSuccessUrl("/login");
 
 
         return http.build();
