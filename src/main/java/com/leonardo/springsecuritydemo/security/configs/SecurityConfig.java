@@ -68,7 +68,7 @@ public class SecurityConfig {
             .rememberMe()
                 .rememberMeParameter("rememberme")
                 .rememberMeCookieName(rememberMeProperties.getCookie())
-                .tokenValiditySeconds(rememberMeProperties.getValidityDays())
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(rememberMeProperties.getValidityDays()))
                 .key(rememberMeProperties.getKey())
         
             .and()
@@ -79,7 +79,6 @@ public class SecurityConfig {
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID", rememberMeProperties.getCookie())
                 .logoutSuccessUrl("/login");
-
 
         return http.build();
     }

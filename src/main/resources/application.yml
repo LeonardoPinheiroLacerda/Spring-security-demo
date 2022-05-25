@@ -7,4 +7,4 @@ application:
         rememberme:
             key: asjlhsalkjhdfga09slfkjhsalkdjfhasdfasdfasjdfhasldfkj0ufa
             cookie: JREMEMBERME
-            validityDays: 1
+            validityDays: 21
