@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.base.Strings;
-import com.leonardo.springsecuritydemo.models.AppUser;
 import com.leonardo.springsecuritydemo.models.enums.Role;
 import com.leonardo.springsecuritydemo.security.jwt.JwtConfig;
 import com.leonardo.springsecuritydemo.security.users.AppUserDetails;
@@ -110,12 +109,11 @@ public class TokenVerifier extends OncePerRequestFilter {
                 
         //Com base no username presente no JWS, o sistema busca o usuário correspondente no banco de dados.
         AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(username);
-        AppUser user = userDetails.getUser();
 
         //Constrói o objeto de autenticação com os dados extraídos a cima
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-            user, 
-            user.getPassword(),
+            userDetails, 
+            userDetails.getPassword(),
             simpleGrantedAuthorities
         );
 
