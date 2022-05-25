@@ -1,3 +1,10 @@
 spring:
     profiles:
         active: test
+
+application:
+    formlogin:
+        rememberme:
+            key: asjlhsalkjhdfga09slfkjhsalkdjfhasdfasdfasjdfhasldfkj0ufa
+            cookie: JREMEMBERME
+            validityDays: 1

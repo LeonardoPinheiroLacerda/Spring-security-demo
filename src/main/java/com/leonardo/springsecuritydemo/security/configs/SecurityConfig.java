@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfig {
     
     private final Environment environment;
+    private final RememberMeProperties rememberMeProperties;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -66,9 +67,9 @@ public class SecurityConfig {
             //Define a opção de remember-me e configura seus paramêtros.
             .rememberMe()
                 .rememberMeParameter("rememberme")
-                .rememberMeCookieName("JREMEMBERME")
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
-                .key("sçdlkfjsçdlfkjsdpfsdf09s8df-9s8s09dksljhldfkjahlsdf8jsdfsdfj")
+                .rememberMeCookieName(rememberMeProperties.getCookie())
+                .tokenValiditySeconds(rememberMeProperties.getValidityDays())
+                .key(rememberMeProperties.getKey())
         
             .and()
             //Define o end-point de logout e seu comportamento
@@ -76,7 +77,7 @@ public class SecurityConfig {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout", HttpMethod.POST.name()))
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .deleteCookies("JSESSIONID", "JREMEMBERME")
+                .deleteCookies("JSESSIONID", rememberMeProperties.getCookie())
                 .logoutSuccessUrl("/login");
 
 
