@@ -55,10 +55,16 @@ public class SecurityConfig {
             .anyRequest().authenticated()
             
             .and()
+            //Impedindo a aplicação de criar sessões.
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
             .and()
+            //Defindo a estratégia de autenticação HTTP basic
             .httpBasic()
+            /*
+            Injetando o entry point da autenticação. No objeto basicAuthenticationEntryPoint contém um método que retorna um header que 
+            informa os clientes que essa aplicação utiliza o HTTP Basic como protocólo de autenticação e autorização.
+            */
             .authenticationEntryPoint(basicAuthenticationEntryPoint);
 
 
