@@ -6,7 +6,7 @@ import javax.crypto.SecretKey;
 
 import com.leonardo.springsecuritydemo.models.enums.Role;
 import com.leonardo.springsecuritydemo.security.jwt.JwtConfig;
-import com.leonardo.springsecuritydemo.security.jwt.JwtUtil;
+import com.leonardo.springsecuritydemo.security.jwt.TokenGenerator;
 import com.leonardo.springsecuritydemo.security.jwt.filters.TokenVerifier;
 import com.leonardo.springsecuritydemo.security.jwt.filters.UsernameAndPasswordAuthentication;
 import com.leonardo.springsecuritydemo.security.users.AppUserDetailsService;
@@ -39,9 +39,9 @@ public class SecurityConfig {
     private final Environment environment;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtConfig jwtConfig, JwtUtil jwtUtil, SecretKey secretKey, UserDetailsService userDetailsService, AuthenticationProvider authenticationProvider) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtConfig jwtConfig, TokenGenerator tokenGenerator, SecretKey secretKey, UserDetailsService userDetailsService, AuthenticationProvider authenticationProvider) throws Exception {
 
-        UsernameAndPasswordAuthentication usernameAndPasswordAuthenticationFilter = new UsernameAndPasswordAuthentication(authenticationProvider, jwtConfig, jwtUtil, secretKey);
+        UsernameAndPasswordAuthentication usernameAndPasswordAuthenticationFilter = new UsernameAndPasswordAuthentication(authenticationProvider, jwtConfig, tokenGenerator, secretKey);
         usernameAndPasswordAuthenticationFilter.setFilterProcessesUrl("/login");
 
         TokenVerifier tokenVerifierFilter = new TokenVerifier(secretKey, userDetailsService);

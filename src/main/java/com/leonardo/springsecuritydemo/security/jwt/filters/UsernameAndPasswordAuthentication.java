@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leonardo.springsecuritydemo.dtos.CredentialsDTO;
 import com.leonardo.springsecuritydemo.security.jwt.JwtConfig;
-import com.leonardo.springsecuritydemo.security.jwt.JwtUtil;
+import com.leonardo.springsecuritydemo.security.jwt.TokenGenerator;
 
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -31,7 +31,7 @@ public class UsernameAndPasswordAuthentication extends UsernamePasswordAuthentic
     
     private final AuthenticationProvider authenticationProvider;
     private final JwtConfig jwtConfig;
-    private final JwtUtil jwtUtil;
+    private final TokenGenerator tokenGenerator;
     private final SecretKey secretKey;
 
     @Override
@@ -70,7 +70,7 @@ public class UsernameAndPasswordAuthentication extends UsernamePasswordAuthentic
         Authentication authResult) throws IOException, ServletException {
         
         //Cria o token
-        String token = jwtUtil.generateToken(authResult, jwtConfig, secretKey);
+        String token = tokenGenerator.generate(authResult, jwtConfig, secretKey);
         
         //Anexa o token nos headers da resposta
         response.addHeader(JwtConfig.AUTHORIZATION_HEADER, token);

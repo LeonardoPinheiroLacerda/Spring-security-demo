@@ -1,6 +1,7 @@
 package com.leonardo.springsecuritydemo.security.jwt.filters;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.base.Strings;
 import com.leonardo.springsecuritydemo.models.AppUser;
+import com.leonardo.springsecuritydemo.models.enums.Role;
 import com.leonardo.springsecuritydemo.security.jwt.JwtConfig;
 import com.leonardo.springsecuritydemo.security.users.AppUserDetails;
 
@@ -95,13 +97,17 @@ public class TokenVerifier extends OncePerRequestFilter {
         @SuppressWarnings("unchecked")
         List<Map<String, String>> authorities = (List<Map<String, String>>) body.get("authorities");
 
-        //Converte a lista de autoridades para um conjunto de SimpleGrantedAuthorities.
-        Set<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities
-            .stream()
-            .map(m -> new SimpleGrantedAuthority(m.get("authority")))
+        //Converte a lista de roles em um Set de SimpleGrantedAuthority que contém
+        Set<Role> roles = authorities.stream()
+            .map(authority -> Role.valueOf(authority.get("authority").replace("ROLE_", "")))
             .collect(Collectors.toSet());
 
-        
+        Set<SimpleGrantedAuthority> simpleGrantedAuthorities = new HashSet<>();
+
+        roles.forEach(role -> {
+            simpleGrantedAuthorities.addAll(role.getAuthorities());
+        });
+                
         //Com base no username presente no JWS, o sistema busca o usuário correspondente no banco de dados.
         AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(username);
         AppUser user = userDetails.getUser();
