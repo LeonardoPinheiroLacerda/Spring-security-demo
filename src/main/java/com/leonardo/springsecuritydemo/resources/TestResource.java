@@ -33,7 +33,7 @@ public class TestResource {
     public ResponseEntity<Void> refreshToken(){
         String token = authService.generateNewJtw();
         return ResponseEntity
-            .noContent()
+            .ok()
             .header(JwtConfig.AUTHORIZATION_HEADER, token)
             .build();
     }

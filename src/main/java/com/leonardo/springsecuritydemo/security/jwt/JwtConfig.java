@@ -21,9 +21,9 @@ public class JwtConfig {
     
     private String secretKey;
     private String tokenExpirationAfterDays;
+    public final static Integer TIMEZONE_OFFSET = 0;
     public final static String AUTHORIZATION_HEADER = "Authorization";
     public final static String TOKEN_PREFIX = "Bearer ";
-
 
     @Bean
     public SecretKey secretKeyForSignin(){

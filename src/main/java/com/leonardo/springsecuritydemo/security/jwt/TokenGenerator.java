@@ -1,7 +1,9 @@
 package com.leonardo.springsecuritydemo.security.jwt;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,8 +28,8 @@ public class TokenGenerator {
         String token = Jwts.builder()
             .setSubject(authResult.getName())
             .claim("authorities", authorities)
-            .setIssuedAt(Date.valueOf(LocalDate.now()))
-            .setExpiration(Date.valueOf(LocalDate.now().plusDays(Integer.parseInt(jwtConfig.getTokenExpirationAfterDays()))))
+            .setIssuedAt(getIssuedAt())
+            .setExpiration(getExpiration(jwtConfig))
             .signWith(secretKey)
             .compact();
         return JwtConfig.TOKEN_PREFIX + token;
@@ -39,8 +41,8 @@ public class TokenGenerator {
         String token = Jwts.builder()
             .setSubject(user.getUsername())
             .claim("authorities", authorities)
-            .setIssuedAt(Date.valueOf(LocalDate.now()))
-            .setExpiration(Date.valueOf(LocalDate.now().plusDays(Integer.parseInt(jwtConfig.getTokenExpirationAfterDays()))))
+            .setIssuedAt(getIssuedAt())
+            .setExpiration(getExpiration(jwtConfig))
             .signWith(secretKey)
             .compact();
             
@@ -52,6 +54,25 @@ public class TokenGenerator {
             .stream()
             .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
             .collect(Collectors.toSet());
+    }
+
+    private Date getIssuedAt(){
+        ZoneOffset zoneOffset = ZoneOffset.ofHours(JwtConfig.TIMEZONE_OFFSET);
+        Instant instant = LocalDateTime
+            .now()
+            .toInstant(zoneOffset);
+
+        return Date.from(instant);
+    }
+
+    private Date getExpiration(JwtConfig jwtConfig){
+        ZoneOffset zoneOffset = ZoneOffset.ofHours(JwtConfig.TIMEZONE_OFFSET);
+        Instant instant = LocalDateTime
+            .now()
+            .plusDays(Long.valueOf(jwtConfig.getTokenExpirationAfterDays()))
+            .toInstant(zoneOffset);
+
+        return Date.from(instant);
     }
 
 }
