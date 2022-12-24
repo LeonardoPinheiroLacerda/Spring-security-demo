@@ -11,6 +11,7 @@ import com.leonardo.springsecuritydemo.security.jwt.filters.TokenVerifier;
 import com.leonardo.springsecuritydemo.security.jwt.filters.UsernameAndPasswordAuthentication;
 import com.leonardo.springsecuritydemo.security.users.AppUserDetailsService;
 
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -50,7 +51,6 @@ public class SecurityConfig {
         if(Arrays.asList(environment.getActiveProfiles()).contains("test")){
             log.warn("Perfil de teste ativo. Acesso ao console do H2 liberado!");
 
-
             http.headers().frameOptions().disable()
                 .and()
                 .authorizeHttpRequests()
@@ -66,10 +66,12 @@ public class SecurityConfig {
             .addFilter(usernameAndPasswordAuthenticationFilter)
             .addFilterAfter(tokenVerifierFilter, UsernameAndPasswordAuthentication.class);
 
-        http.authorizeHttpRequests()
-            .requestMatchers(HttpMethod.GET, "/api/tests/common").hasRole(Role.COMMON.name())
-            .requestMatchers(HttpMethod.GET, "/api/tests/admin").hasRole(Role.ADMIN.name())
-            .anyRequest().authenticated();
+        http.authorizeHttpRequests(authorization -> {
+            authorization
+                .requestMatchers(HttpMethod.GET, "/api/tests/common").hasRole(Role.COMMON.name())
+                .requestMatchers(HttpMethod.GET, "/api/tests/admin").hasRole(Role.ADMIN.name())
+                .anyRequest().authenticated();
+        });            
 
 
         return http.build();
