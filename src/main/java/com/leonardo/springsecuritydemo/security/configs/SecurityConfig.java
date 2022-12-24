@@ -49,12 +49,15 @@ public class SecurityConfig {
 
         }
 
-        http.authorizeHttpRequests()
-            .requestMatchers(HttpMethod.GET, "/api/tests/common").hasRole(Role.COMMON.name())
-            .requestMatchers(HttpMethod.GET, "/api/tests/admin").hasRole(Role.ADMIN.name())
-            .anyRequest().authenticated()
+        http.authorizeHttpRequests(authorization -> {
+            authorization
+                .requestMatchers(HttpMethod.GET, "/api/tests/common").hasRole(Role.COMMON.name())
+                .requestMatchers(HttpMethod.GET, "/api/tests/admin").hasRole(Role.ADMIN.name())
+                .anyRequest().authenticated();
+        });
             
-            .and()
+            
+        http
             //Define a estratégia de autenticação e autorização como 'formLogin'
             .formLogin()
             
