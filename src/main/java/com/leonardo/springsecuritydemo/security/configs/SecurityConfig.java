@@ -44,19 +44,23 @@ public class SecurityConfig {
 
             http.headers().frameOptions().disable()
                 .and()
-                .authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll();
+                .authorizeHttpRequests()
+                .requestMatchers("/h2-console/**").permitAll();
 
         }
 
-        http.authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/api/tests/common").hasRole(Role.COMMON.name())
-            .antMatchers(HttpMethod.GET, "/api/tests/admin").hasRole(Role.ADMIN.name())
-            .anyRequest().authenticated()
+        http.authorizeHttpRequests(authorization -> {
+            authorization
+                .requestMatchers(HttpMethod.GET, "/api/tests/common").hasRole(Role.COMMON.name())
+                .requestMatchers(HttpMethod.GET, "/api/tests/admin").hasRole(Role.ADMIN.name())
+                .anyRequest().authenticated();
+        });
             
-            .and()
+            
+           
+        http.
             //Impedindo a aplicação de criar sessões.
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
             .and()
             //Defindo a estratégia de autenticação HTTP basic
