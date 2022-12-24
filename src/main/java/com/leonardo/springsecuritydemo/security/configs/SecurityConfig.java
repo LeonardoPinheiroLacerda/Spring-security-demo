@@ -53,8 +53,8 @@ public class SecurityConfig {
 
             http.headers().frameOptions().disable()
                 .and()
-                .authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll();
+                .authorizeHttpRequests()
+                .requestMatchers("/h2-console/**").permitAll();
 
         }
 
@@ -66,9 +66,9 @@ public class SecurityConfig {
             .addFilter(usernameAndPasswordAuthenticationFilter)
             .addFilterAfter(tokenVerifierFilter, UsernameAndPasswordAuthentication.class);
 
-        http.authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/api/tests/common").hasRole(Role.COMMON.name())
-            .antMatchers(HttpMethod.GET, "/api/tests/admin").hasRole(Role.ADMIN.name())
+        http.authorizeHttpRequests()
+            .requestMatchers(HttpMethod.GET, "/api/tests/common").hasRole(Role.COMMON.name())
+            .requestMatchers(HttpMethod.GET, "/api/tests/admin").hasRole(Role.ADMIN.name())
             .anyRequest().authenticated();
 
 

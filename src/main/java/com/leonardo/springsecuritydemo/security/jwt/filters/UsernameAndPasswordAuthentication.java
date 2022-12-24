@@ -3,15 +3,6 @@ package com.leonardo.springsecuritydemo.security.jwt.filters;
 import java.io.IOException;
 
 import javax.crypto.SecretKey;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leonardo.springsecuritydemo.dtos.CredentialsDTO;
-import com.leonardo.springsecuritydemo.security.jwt.JwtConfig;
-import com.leonardo.springsecuritydemo.security.jwt.TokenGenerator;
 
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -20,6 +11,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leonardo.springsecuritydemo.dtos.CredentialsDTO;
+import com.leonardo.springsecuritydemo.security.jwt.JwtConfig;
+import com.leonardo.springsecuritydemo.security.jwt.TokenGenerator;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
